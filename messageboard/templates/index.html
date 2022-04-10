@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h6 class="text-center text-muted"><strong>这里是我的个人留言板，你可以在这里写下想对我说的话</strong></h6>
+<form action="{{ url_for('index') }}" method="post" class="form" role="form">
+    {{form.csrf_token}}
+    <div class="form-group required"><label class="form-control-label" for="name">Your name</label>
+        <input class="form-control" id="name" maxlength="20" minlength="1" name="name" required="" type="text" value="">
+    </div>
+    <div class="form-group required"><label class="form-control-label" for="body">Your message</label>
+        <textarea class="form-control" id="body" maxlength="200" minlength="1" name="body" required="" style="height: 153px;"></textarea>
+    </div>
+    <input class="btn btn-primary btn-md" id="submit" name="submit" type="submit" value="Submit">
+</form>
+<h5>
+    {{ messages|length }} messages
+    <small class="float-right">
+        <a href="#bottom" title="Go Bottom">&darr;</a>
+    </small>
+</h5>
+<div>
+    {% for message in messages %}
+            <a class="list-group-item list-group-item-action flex-column">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1 text-success">{{ message.name }}
+                        <small class="text-muted"> #{{ loop.revindex }}</small>
+                    </h5>
+                    <small data-toggle="tooltip" data-placement="top"
+                           data-timestamp="{{ message.timestamp.strftime('%Y-%m-%dT%H:%M:%SZ') }}"
+                           data-delay="500">
+                        {{ moment(message.timestamp).fromNow(refresh=True) }}
+                    </small>
+                </div>
+                <p class="mb-1">{{ message.body }}</p>
+            </a>
+    {% endfor %}
+</div>
+{% endblock %}
